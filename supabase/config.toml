@@ -1,1 +1,12 @@
 project_id = "unwmtxtwfnljnvqjzfig"
+
+[auth]
+enabled = true
+site_url = "https://unwmtxtwfnljnvqjzfig.supabase.co"
+additional_redirect_urls = ["https://localhost:3000"]
+
+[db]
+major_version = 15
+
+[functions.seed_classes]
+verify_jwt = false
