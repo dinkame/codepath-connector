@@ -495,24 +495,6 @@
             // Fetch activities from Supabase
             await fetchActivities();
             
-            // Optional: trigger seeding when requested
-            const params = new URLSearchParams(window.location.search);
-            const shouldSeed = params.get('seed') === '1';
-
-            if (activities.length === 0 && shouldSeed) {
-                grid.innerHTML = '<div class="col-span-full text-center py-16"><h3 class="text-2xl font-semibold text-gray-700">ממלאים נתונים פעם אחת...</h3><p class="text-gray-500 mt-2">נא להמתין כמה שניות</p></div>';
-                try {
-                    const resp = await fetch('https://unwmtxtwfnljnvqjzfig.supabase.co/functions/v1/seed_classes', { method: 'GET' });
-                    const resJson = await resp.json().catch(() => ({}));
-                    console.log('seed_classes response:', resJson);
-                    // Refetch after seeding
-                    await fetchActivities();
-                } catch (e) {
-                    console.error('Seeding failed:', e);
-                    grid.innerHTML = '<div class="col-span-full text-center py-16"><h3 class="text-2xl font-semibold text-red-600">שגיאה במילוי הנתונים</h3><p class="text-gray-500 mt-2">נסו לרענן את הדף</p></div>';
-                }
-            }
-
             // Initialize filters and render
             populateCenterFilter();
             filterAndRender();

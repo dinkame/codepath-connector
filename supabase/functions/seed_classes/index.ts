@@ -19,6 +19,21 @@ Deno.serve(async (req) => {
     )
 
     console.log('Starting to seed classes data...');
+    // Idempotency: skip if table already has rows
+    const { count, error: countError } = await supabaseClient
+      .from('classes')
+      .select('*', { count: 'exact', head: true });
+    if (countError) {
+      console.error('Error counting classes:', countError);
+      // Continue; we will try to seed anyway
+    }
+    if ((count ?? 0) > 0) {
+      console.log(`Seed skipped: classes already contain ${count} rows`);
+      return new Response(
+        JSON.stringify({ success: true, message: `Already seeded (${count} rows)` }),
+        { headers: { ...corsHeaders, 'Content-Type': 'application/json' }, status: 200 },
+      );
+    }
 
     // The activities data from the HTML file
     const activities = [
